@@ -4,7 +4,7 @@ import movie_reservation.types.SeatNumber;
 import movie_reservation.types.SeatState;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,32 +17,53 @@ public class Seat {
     @JoinColumn(name = "THEATER_ID")
     private Theater theater;
     @Embedded
-    @Column(nullable = false, updatable = false)
+    @Column(name = "SEAT_NUMBER", nullable = false, updatable = false)
     private SeatNumber seatNumber;
     @Enumerated(EnumType.STRING)
     @Column(updatable = true, nullable = false)
-    private SeatState state;
+    private SeatState state;    // 가용 / 불가용
 
     @OneToMany(mappedBy = "seat")
-    private List<ReservedSeat> reservedSeats = new LinkedList<>();
+    private List<ReservedSeat> reservedSeats;
 
     public Seat() {
 
     }
 
-    public Seat(Theater theater, SeatNumber seatNumber, SeatState state) {
+    public Seat(Theater theater, SeatNumber seatNumber) {
         setTheater(theater);
         this.seatNumber = seatNumber;
-        this.state = state;
+        state = SeatState.AVAILABLE;
+        reservedSeats = new ArrayList<>();
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public List<ReservedSeat> getReservedSeats() {
         return this.reservedSeats;
     }
 
-    public void setTheater(Theater theater) {
+    public SeatState getState() {
+        return state;
+    }
+
+    public Theater getTheater() {
+        return theater;
+    }
+
+    public SeatNumber getSeatNumber() {
+        return seatNumber;
+    }
+
+    private void setTheater(Theater theater) {
         this.theater = theater;
         if(!this.theater.getSeats().contains(this))
             this.theater.getSeats().add(this);
+    }
+
+    public void setState(SeatState state) {
+        this.state = state;
     }
 }

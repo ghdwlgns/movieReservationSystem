@@ -3,25 +3,42 @@ package movie_reservation.entities;
 import movie_reservation.types.Filmography;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @MappedSuperclass
 public abstract class MovieStar {
     private String name;
     @Temporal(TemporalType.DATE)
-    private Date birth;
-    @Embedded
-    private Filmography filmography;
+    private LocalDate birth;
+    @ElementCollection
+    private List<Filmography> filmographyList;
 
-    public void setName(String name) {
+    protected MovieStar() {
+
+    }
+
+    public MovieStar(String name, LocalDate birth) {
         this.name = name;
+        this.birth = birth;
+        filmographyList = new ArrayList<>();
     }
 
-    public void setBirth(Date birth) {
-        this.birth = birth;
+    public void addFilmography(Filmography filmography) {
+        filmographyList.add(filmography);
     }
-    public void setFilmography(Filmography filmography) {
-        this.filmography = filmography;
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getBirth() {
+        return birth;
+    }
+
+    public List<Filmography> getFilmographyList() {
+        return filmographyList;
     }
 }

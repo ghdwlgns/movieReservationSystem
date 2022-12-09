@@ -3,7 +3,8 @@ package movie_reservation.entities;
 import movie_reservation.types.Filmography;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,14 +22,33 @@ public class Director extends MovieStar {
 
     }
 
-    public Director(String name, Date birth, Filmography filmography, String birthPlace) {
-        setName(name);
-        setBirth(birth);
-        setFilmography(filmography);
+    public Director(String name, LocalDate birth, String birthPlace) {
+        super(name, birth);
         this.birthPlace = birthPlace;
+        moviesDirected = new ArrayList<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return super.getName();
+    }
+
+    public LocalDate getBirth() {
+        return super.getBirth();
+    }
+
+    public List<Filmography> getFilmographyList() {
+        return super.getFilmographyList();
     }
 
     public List<Movie> getMoviesDirected() {
         return moviesDirected;
+    }
+
+    public String getBirthPlace() {
+        return birthPlace;
     }
 }

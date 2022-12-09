@@ -1,9 +1,12 @@
 package movie_reservation.entities;
 
+import movie_reservation.types.Casting;
+import movie_reservation.types.Filmography;
 import movie_reservation.types.Genre;
+import movie_reservation.types.Job;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -12,19 +15,24 @@ public class Movie extends UploadedTime {
     @Column(name = "MOVIE_ID")
     private Long id;
 
+    @Column(name = "TITLE", nullable = false)
     private String title;
+    @Column(name = "RELEASE_DATE", nullable = false)
     private String releaseDate;
     @OneToMany(mappedBy = "movie")
-    private List<ActorList> actorLists = new LinkedList<>();
-    @ManyToOne
-    @JoinColumn(name = "DIRECTOR_ID")
+    @Column(name = "ACTOR_ROLES", nullable = false)
+    private List<ActorRole> actorRoles;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DIRECTOR_ID", nullable = false)
     private Director director;
+    @Column(name = "GENRE", nullable = false)
     @Enumerated(EnumType.STRING)
     private Genre genre;
     @Column(nullable = false, updatable = false)
     private Long runningTime;
     @OneToMany(mappedBy = "movie")
-    private List<Screen> screens = new LinkedList<>();
+    @Column(name = "SCREENS", nullable = false)
+    private List<Screen> screens;
 
     public Movie() {
 
@@ -35,11 +43,47 @@ public class Movie extends UploadedTime {
         this.releaseDate = releaseDate;
         this.genre = genre;
         this.runningTime = runningTime;
+        actorRoles = new ArrayList<>();
+        screens = new ArrayList<>();
         create();
     }
 
-    public List<ActorList> getActorLists() {
-        return this.actorLists;
+    private void setDirector(Director director) {
+        this.director = director;
+
+        if(!director.getMoviesDirected().contains(this)) {
+            director.getMoviesDirected().add(this);
+            Filmography filmography = new Filmography(title, Job.DIRECTOR, Casting.DIRECTOR);
+            director.getFilmographyList().add(filmography);
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public List<ActorRole> getActorRoles() {
+        return actorRoles;
+    }
+
+    public Director getDirector() {
+        return director;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public List<ActorRole> getActorLists() {
+        return this.actorRoles;
     }
 
     public List<Screen> getScreens() {
@@ -48,5 +92,9 @@ public class Movie extends UploadedTime {
 
     public Long getRunningTime() {
         return this.runningTime;
+    }
+
+    public void changeReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }

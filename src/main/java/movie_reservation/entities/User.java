@@ -17,7 +17,7 @@ public class User extends UploadedTime {
     @Embedded
     private Address address;
     @OneToMany(mappedBy = "user")
-    private List<Reservation> reservationList = new LinkedList<>();
+    private List<Reservation> reservationList;
 
     public User() {
 
@@ -27,10 +27,35 @@ public class User extends UploadedTime {
         this.name = name;
         this.age = age;
         address = new Address(city, street, zipCode);
+        reservationList = new LinkedList<>();
         create();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getAge() {
+        return age;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     public List<Reservation> getReservationList() {
         return this.reservationList;
+    }
+
+    public void changeAge(Long age) {
+        this.age = age;
+    }
+
+    public void changeAddress(Address address) {
+        this.address = address;
     }
 }

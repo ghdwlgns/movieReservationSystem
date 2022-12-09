@@ -1,7 +1,7 @@
 package movie_reservation.entities;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,9 +15,9 @@ public class Theater {
     @Column(updatable = false, nullable = false)
     private String floor;
     @OneToMany(mappedBy = "theater")
-    private List<Screen> screens = new LinkedList<>();
+    private List<Screen> screens;
     @OneToMany(mappedBy = "theater")
-    private List<Seat> seats = new LinkedList<>();
+    private List<Seat> seats;
 
     public Theater() {
 
@@ -26,6 +26,20 @@ public class Theater {
     public Theater(String theaterName, String floor) {
         this.theaterName = theaterName;
         this.floor = floor;
+        screens = new ArrayList<>();
+        seats = new ArrayList<>();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTheaterName() {
+        return theaterName;
+    }
+
+    public String getFloor() {
+        return floor;
     }
 
     public List<Screen> getScreens() {
