@@ -1,6 +1,7 @@
 package movie_reservation.daos;
 
 import movie_reservation.entities.Seat;
+import movie_reservation.entities.Theater;
 import movie_reservation.types.SeatNumber;
 import movie_reservation.types.SeatState;
 
@@ -13,6 +14,6 @@ public interface SeatDAO {
     void addSeat(Seat seat);
     List<Seat> findSeats();
     void updateSeats(SeatNumber seatNumber, SeatState seatState);
-    void removeSeat(SeatNumber seatNumber);
+    void removeSeat(Theater theater, SeatNumber seatNumber);
     void removeAllSeats();
 }

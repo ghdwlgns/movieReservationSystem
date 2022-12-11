@@ -1,8 +1,10 @@
-package services;
+package movie_reservation.services;
 
 import movie_reservation.data.ReservationDTO;
 import movie_reservation.data.ScreenDTO;
 import movie_reservation.data.UserDTO;
+
+import java.util.List;
 
 public interface ReservationService {
     /**
@@ -11,6 +13,6 @@ public interface ReservationService {
      * 예약 변경(취소)
      */
     void makeReservation(ScreenDTO screen, UserDTO user);
-    void findReservationsByUser();
+    List<ReservationDTO> findReservationsByUser(String userName);
     void cancelReservation(UserDTO user, ReservationDTO reservation);
 }

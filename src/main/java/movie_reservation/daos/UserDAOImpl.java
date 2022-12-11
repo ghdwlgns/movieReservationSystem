@@ -1,6 +1,5 @@
 package movie_reservation.daos;
 
-import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import movie_reservation.entities.QUser;
 import movie_reservation.entities.User;
@@ -10,43 +9,19 @@ import javax.persistence.*;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
-    private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    private EntityTransaction entityTransaction;
     private JPAQueryFactory queryFactory;
     private QUser qUser;
 
-    public UserDAOImpl() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("movie_reservation");
-        entityManager = entityManagerFactory.createEntityManager();
-        entityTransaction = entityManager.getTransaction();
-        queryFactory = new JPAQueryFactory(entityManager);
+    public UserDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        queryFactory = new JPAQueryFactory(this.entityManager);
         qUser = new QUser("user");
-    }
-
-    public void terminateDAO() {
-        entityManager.close();
-        entityManagerFactory.close();
-    }
-
-    private void flushChange() {
-        entityManager.flush();
-        entityManager.clear();
     }
 
     @Override
     public void addUser(User user) {
-        try {
-            entityTransaction.begin();
-
-            entityManager.persist(user);
-            flushChange();
-
-            entityTransaction.commit();
-        } catch(Exception e) {
-            e.printStackTrace();
-            entityTransaction.rollback();
-        }
+        entityManager.persist(user);
     }
 
     @Override
@@ -64,88 +39,34 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void updateUserAge(String userName, Long ageBefore, Long ageAfter) {
-        User userFind = null;
-        Long userFindId = null;
+    public void updateUserAge(String userName, Long ageAfter) {
+        User userFind = queryFactory.selectFrom(qUser)
+                .where(qUser.name.eq(userName))
+                .fetchFirst();
 
-        try {
-            entityTransaction.begin();
+        userFind.changeAge(ageAfter);
 
-            userFind = queryFactory.selectFrom(qUser)
-                    .where(qUser.name.eq(userName),
-                            qUser.age.eq(ageBefore))
-                    .fetchFirst();
-
-            userFindId = userFind.getId();
-
-            User userUpdate = entityManager.find(User.class, userFindId);
-            userUpdate.changeAge(ageAfter);
-
-            flushChange();
-
-            entityTransaction.commit();
-        } catch(NullPointerException | NonUniqueResultException e) {
-            e.printStackTrace();
-        } catch(RollbackException e) {
-            System.out.println("Error Message: " + e);
-            entityTransaction.rollback();
-        }
+        entityManager.flush();
     }
 
     @Override
-    public void updateUserAddress(String userName, Address addressBefore, Address addressAfter) {
-        User userFind = null;
-        Long userFindId = null;
+    public void updateUserAddress(String userName, Address addressAfter) {
+        User userFind = queryFactory.selectFrom(qUser)
+                .where(qUser.name.eq(userName))
+                .fetchFirst();
 
-        try {
-            entityTransaction.begin();
+        userFind.changeAddress(addressAfter);
 
-            userFind = queryFactory.selectFrom(qUser)
-                    .where(qUser.name.eq(userName),
-                            qUser.address.eq(addressBefore))
-                    .fetchFirst();
-
-            userFindId = userFind.getId();
-
-            User userUpdate = entityManager.find(User.class, userFindId);
-            userUpdate.changeAddress(addressAfter);
-
-            flushChange();
-
-            entityTransaction.commit();
-        } catch(NullPointerException | NonUniqueResultException e) {
-            e.printStackTrace();
-        } catch(RollbackException e) {
-            System.out.println("Error Message: " + e);
-            entityTransaction.rollback();
-        }
+        entityManager.flush();
     }
 
     @Override
     public void removeUser(String userName) {
-        User userFind = null;
-        Long userFindId = null;
+        User userFind = queryFactory.selectFrom(qUser)
+                .where(qUser.name.eq(userName))
+                .fetchOne();
 
-        try {
-            entityTransaction.begin();
-
-            userFind = queryFactory.selectFrom(qUser)
-                    .where(qUser.name.eq(userName))
-                    .fetchOne();
-            userFindId = userFind.getId();
-
-            User userRemove = entityManager.find(User.class, userFindId);
-            entityManager.remove(userRemove);
-
-            flushChange();
-
-            entityTransaction.commit();
-        } catch(NullPointerException e) {
-            System.out.println("Error Message: " + e);
-        } catch(RollbackException | IllegalStateException e) {
-            System.out.println("Error Message: " + e);
-            entityTransaction.rollback();
-        }
+        entityManager.remove(userFind);
     }
 
     @Override
@@ -154,17 +75,8 @@ public class UserDAOImpl implements UserDAO {
         List<User> users = queryFactory.selectFrom(qUser)
                 .fetch();
 
-        try {
-            entityTransaction.begin();
-
-            for(User user : users)
-                entityManager.remove(user);
-
-            flushChange();
-            entityTransaction.commit();
-        } catch(RollbackException e) {
-            e.printStackTrace();
-            entityTransaction.rollback();
+        for(User user : users) {
+            entityManager.remove(user);
         }
     }
 }

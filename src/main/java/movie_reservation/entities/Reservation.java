@@ -1,5 +1,7 @@
 package movie_reservation.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import movie_reservation.types.State;
 
 import javax.persistence.*;
@@ -7,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@Getter
 public class Reservation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RESERVATION_ID")
@@ -25,34 +29,22 @@ public class Reservation {
     @JoinColumn(name = "SCREEN_ID")
     private Screen screen;
 
-    public Reservation() {
-
-    }
-
-    public Reservation(User user, Screen screen) {
-        this.user = user;
-        this.screen = screen;
+    public Reservation(User user, Screen screen, List<ReservedSeat> reservedSeats) {
+        setUser(user);
+        setScreen(screen);
         state = State.RESERVED;
-        reservedSeats = new ArrayList<>();
+        this.reservedSeats = reservedSeats;
     }
 
-    public Long getId() {
-        return id;
+    private void setScreen(Screen screen) {
+        this.screen = screen;
+        this.screen.reserveScreen(this);
     }
 
-    public List<ReservedSeat> getReservedSeats() {
-        return this.reservedSeats;
-    }
+    private void setUser(User user) {
+        this.user = user;
 
-    public User getUser() {
-        return user;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public Screen getScreen() {
-        return screen;
+        if(!this.user.getReservationList().contains(this))
+            this.user.getReservationList().add(this);
     }
 }

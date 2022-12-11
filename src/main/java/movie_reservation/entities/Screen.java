@@ -1,11 +1,16 @@
 package movie_reservation.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Screen {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SCREEN_ID")
@@ -26,59 +31,29 @@ public class Screen {
     @OneToOne(mappedBy = "reservation")
     private Reservation reservation;
 
-    public Screen() {
-
-    }
-
-    public Screen(Movie movie, Theater theater, LocalTime startTime) {
+    public Screen(Movie movie, Theater theater, LocalTime startTime, LocalTime endTime) {
         setMovie(movie);
         setTheater(theater);
         this.startTime = startTime;
-        reservedSeats = new ArrayList<>();
-        calculateEndTime();
+        this.endTime = endTime;
+        this.reservedSeats = new ArrayList<>();
     }
 
     private void setMovie(Movie movie) {
-        if(this.movie != null)
-            this.movie = movie;
-        this.movie.getScreens().add(this);
+        this.movie = movie;
+
+        if(!this.movie.getScreens().contains(this))
+            this.movie.getScreens().add(this);
     }
 
     private void setTheater(Theater theater) {
-        if(this.theater != null)
-            this.theater = theater;
-        this.theater.getScreens().add(this);
+        this.theater = theater;
+
+        if(!this.theater.getScreens().contains(this))
+            this.theater.getScreens().add(this);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public List<ReservedSeat> getReservedSeats() {
-        return this.reservedSeats;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public Theater getTheater() {
-        return theater;
-    }
-
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public LocalTime getEndTime() {
-        return endTime;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    private void calculateEndTime() {
-        this.endTime = startTime.plusMinutes(movie.getRunningTime());
+    public void reserveScreen(Reservation reservation) {
+        this.reservation = reservation;
     }
 }

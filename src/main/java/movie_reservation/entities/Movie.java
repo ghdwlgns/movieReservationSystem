@@ -1,15 +1,21 @@
 package movie_reservation.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import movie_reservation.response_dtos.MovieResponse;
 import movie_reservation.types.Casting;
 import movie_reservation.types.Filmography;
 import movie_reservation.types.Genre;
 import movie_reservation.types.Job;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Movie extends UploadedTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MOVIE_ID")
@@ -34,18 +40,17 @@ public class Movie extends UploadedTime {
     @Column(name = "SCREENS", nullable = false)
     private List<Screen> screens;
 
-    public Movie() {
-
-    }
-
-    public Movie(String title, String releaseDate, Genre genre, Long runningTime) {
+    public Movie(String title, String releaseDate, Genre genre, Long runningTime, Director director, LocalDateTime dateCreated, LocalDateTime lastModified) {
         this.title = title;
         this.releaseDate = releaseDate;
         this.genre = genre;
         this.runningTime = runningTime;
+        setDirector(director);
+        create(dateCreated);
+        modify(lastModified);
+
         actorRoles = new ArrayList<>();
         screens = new ArrayList<>();
-        create();
     }
 
     private void setDirector(Director director) {
@@ -58,43 +63,11 @@ public class Movie extends UploadedTime {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public List<ActorRole> getActorRoles() {
-        return actorRoles;
-    }
-
-    public Director getDirector() {
-        return director;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public List<ActorRole> getActorLists() {
-        return this.actorRoles;
-    }
-
-    public List<Screen> getScreens() {
-        return this.screens;
-    }
-
-    public Long getRunningTime() {
-        return this.runningTime;
-    }
-
     public void changeReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public MovieResponse toResponse() {
+        return new MovieResponse(title, releaseDate, genre, runningTime);
     }
 }

@@ -1,2 +1,4 @@
-package movie_reservation.request_dtos;public class ScreenRequest {
+package movie_reservation.request_dtos;
+
+public class ScreenRequest {
 }

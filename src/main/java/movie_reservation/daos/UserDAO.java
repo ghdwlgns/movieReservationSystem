@@ -9,8 +9,8 @@ public interface UserDAO {
     void addUser(User user);    // saveUser
     User findUser(String userName);
     List<User> findAllUsers();
-    void updateUserAge(String userName, Long ageBefore, Long ageAfter);
-    void updateUserAddress(String userName, Address addressBefore, Address addressAfter);
+    void updateUserAge(String userName, Long ageAfter);
+    void updateUserAddress(String userName, Address addressAfter);
     void removeUser(String userName);
     void removeAllUsers();
 }

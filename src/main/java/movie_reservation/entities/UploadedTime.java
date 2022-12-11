@@ -9,11 +9,11 @@ public abstract class UploadedTime {
     private LocalDateTime dateCreated;
     private LocalDateTime dateModified;
 
-    public void create() {
-        this.dateCreated = LocalDateTime.now();
+    public void create(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
-    public void modify() {
-        dateModified = LocalDateTime.now();
+    public void modify(LocalDateTime dateModified) {
+        this.dateModified = dateModified;
     }
 }

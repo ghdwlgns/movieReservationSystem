@@ -1,6 +1,7 @@
 package movie_reservation.daos;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
+import movie_reservation.entities.ActorRole;
+import movie_reservation.entities.Director;
 import movie_reservation.entities.Movie;
 import movie_reservation.types.Genre;
 
@@ -11,9 +12,8 @@ public interface MovieDAO {
     Movie findMovie(String movieTitle);
     List<Movie> findAllMovies();
     List<Movie> findMoviesByGenre(Genre genre);
+    List<Movie> findMoviesBy(Director director, ActorRole actorRole, String year);
     void updateMovieReleaseDate(String movieTitle, String releaseDateUpdate);
     void removeMovie(String movieTitle);
     void removeAllMovies();
-    BooleanExpression releaseDateContains(String year);
-    BooleanExpression genreEq(Genre genre);
 }

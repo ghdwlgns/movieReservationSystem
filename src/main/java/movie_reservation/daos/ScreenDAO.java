@@ -9,4 +9,5 @@ public interface ScreenDAO {
     void addScreen(Screen screen);
     List<Screen> findScreens();
     List<Screen> findScreensByStartTime(String startTime);
+    List<Screen> findScreensByMovieTitle(String movieTitle);
 }

@@ -1,2 +1,4 @@
-package movie_reservation.request_dtos;public class ReservationRequest {
+package movie_reservation.request_dtos;
+
+public class ReservationRequest {
 }

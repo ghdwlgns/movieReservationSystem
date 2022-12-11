@@ -1,8 +1,13 @@
 package movie_reservation.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
+@Getter
 public class ReservedSeat {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "RESERVED_SEAT_ID")
@@ -17,10 +22,6 @@ public class ReservedSeat {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "RESERVATION_ID", nullable = false)
     private Reservation reservation;
-
-    public ReservedSeat() {
-
-    }
 
     public ReservedSeat(Seat seat, Screen screen, Reservation reservation) {
         setSeat(seat);
@@ -46,21 +47,5 @@ public class ReservedSeat {
         this.reservation = reservation;
         if(!this.reservation.getReservedSeats().contains(this))
             this.reservation.getReservedSeats().add(this);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Seat getSeat() {
-        return seat;
-    }
-
-    public Screen getScreen() {
-        return screen;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
     }
 }

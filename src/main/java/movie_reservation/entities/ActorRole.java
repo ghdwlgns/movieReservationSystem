@@ -43,8 +43,8 @@ public class ActorRole {
     private void setMovie(Movie movie) {
         this.movie = movie;
 
-        if(!this.movie.getActorLists().contains(this))
-            this.movie.getActorLists().add(this);
+        if(!this.movie.getActorRoles().contains(this))
+            this.movie.getActorRoles().add(this);
     }
 
     private void setActor(Actor actor) {

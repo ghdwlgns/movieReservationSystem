@@ -1,52 +1,26 @@
 package movie_reservation.daos;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import movie_reservation.entities.Movie;
-import movie_reservation.entities.QMovie;
+import movie_reservation.entities.*;
 import movie_reservation.types.Genre;
 
 import javax.persistence.*;
 import java.util.List;
 
 public class MovieDAOImpl implements MovieDAO {
-    private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
-    private EntityTransaction entityTransaction;
     private JPAQueryFactory queryFactory;
     private QMovie qMovie;
 
-    public MovieDAOImpl() {
-        entityManagerFactory = Persistence.createEntityManagerFactory("movie_reservation");
-        entityManager = entityManagerFactory.createEntityManager();
-        entityTransaction = entityManager.getTransaction();
-        queryFactory = new JPAQueryFactory(entityManager);
+    public MovieDAOImpl(EntityManager entityManager) {
+        this.entityManager = entityManager;
+        queryFactory = new JPAQueryFactory(this.entityManager);
         qMovie = new QMovie("movie");
-    }
-
-    public void terminateDAO() {
-        entityManager.close();
-        entityManagerFactory.close();
-    }
-
-    private void flushChange() {
-        entityManager.flush();
-        entityManager.clear();
     }
 
     @Override
     public void addMovie(Movie movie) {
-        try {
-            entityTransaction.begin();
-
-            entityManager.persist(movie);
-
-            flushChange();
-            entityTransaction.commit();
-        } catch(RollbackException e) {
-            e.printStackTrace();
-            entityTransaction.rollback();
-        }
+        entityManager.persist(movie);
     }
 
     @Override
@@ -66,46 +40,36 @@ public class MovieDAOImpl implements MovieDAO {
     @Override
     public List<Movie> findMoviesByGenre(Genre genre) {
         return queryFactory.selectFrom(qMovie)
-                .where(genreEq(genre))
+                .where(qMovie.genre.eq(genre))
                 .orderBy(qMovie.title.asc())
                 .fetch();
     }
 
     @Override
+    public List<Movie> findMoviesBy(Director director, ActorRole actorRole, String year) {
+        return null;
+    }
+
+    @Override
     public void updateMovieReleaseDate(String movieTitle, String releaseDateUpdate) {
-        try {
-            entityTransaction.begin();
-            Movie movieFind = queryFactory.selectFrom(qMovie)
-                    .where(qMovie.releaseDate.eq(movieTitle))
-                    .fetchFirst();
+        Movie movieFind = queryFactory.selectFrom(qMovie)
+                .where(qMovie.releaseDate.eq(movieTitle))
+                .fetchFirst();
 
-            Movie movieUpdate = entityManager.find(Movie.class, movieFind.getId());
-            movieUpdate.changeReleaseDate(releaseDateUpdate);
+        movieFind.changeReleaseDate(releaseDateUpdate);
 
-            flushChange();
-            entityTransaction.commit();
-        } catch(RollbackException e) {
-            e.printStackTrace();
-            entityTransaction.rollback();
-        }
+        entityManager.flush();
     }
 
     @Override
     public void removeMovie(String movieTitle) {
-        try {
-            entityTransaction.begin();
-            Movie movieFind = queryFactory.selectFrom(qMovie)
-                    .where(qMovie.title.eq(movieTitle))
-                    .fetchFirst();
+        Movie movieFind = queryFactory.selectFrom(qMovie)
+                .where(qMovie.title.eq(movieTitle))
+                .fetchFirst();
 
-            entityManager.remove(movieFind);
+        Movie movieRemove = entityManager.find(Movie.class, movieFind.getId());
 
-            flushChange();
-            entityTransaction.commit();
-        } catch(RollbackException e) {
-            e.printStackTrace();
-            entityTransaction.rollback();
-        }
+        entityManager.remove(movieRemove);
     }
 
     @Override
@@ -113,31 +77,10 @@ public class MovieDAOImpl implements MovieDAO {
         List<Movie> movies = queryFactory.selectFrom(qMovie)
                 .fetch();
 
-        try {
-            entityTransaction.begin();
+        for(Movie movie : movies) {
+            Movie movieRemove = entityManager.find(Movie.class, movie.getId());
 
-            for(Movie movie : movies)
-                entityManager.remove(movie);
-
-            flushChange();
-            entityTransaction.commit();
-        } catch(RollbackException e) {
-            e.printStackTrace();
-            entityTransaction.rollback();
+            entityManager.remove(movieRemove);
         }
-    }
-
-    @Override
-    public BooleanExpression releaseDateContains(String year) {
-        if(year == null || year.equals(""))
-            return null;
-        return QMovie.movie.releaseDate.contains(year);
-    }
-
-    @Override
-    public BooleanExpression genreEq(Genre genre) {
-        if(genre == null)
-            return null;
-        return QMovie.movie.genre.eq(genre);
     }
 }

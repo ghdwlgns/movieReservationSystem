@@ -4,7 +4,6 @@ import movie_reservation.types.SeatNumber;
 import movie_reservation.types.SeatState;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +19,7 @@ public class Seat {
     @Column(name = "SEAT_NUMBER", nullable = false, updatable = false)
     private SeatNumber seatNumber;
     @Enumerated(EnumType.STRING)
-    @Column(updatable = true, nullable = false)
+    @Column(nullable = false)
     private SeatState state;    // 가용 / 불가용
 
     @OneToMany(mappedBy = "seat")
@@ -30,11 +29,17 @@ public class Seat {
 
     }
 
-    public Seat(Theater theater, SeatNumber seatNumber) {
+    public Seat(Theater theater, SeatNumber seatNumber, List<ReservedSeat> reservedSeats) {
         setTheater(theater);
         this.seatNumber = seatNumber;
         state = SeatState.AVAILABLE;
-        reservedSeats = new ArrayList<>();
+        this.reservedSeats = reservedSeats;
+    }
+
+    private void setTheater(Theater theater) {
+        this.theater = theater;
+        if(!this.theater.getSeats().contains(this))
+            this.theater.getSeats().add(this);
     }
 
     public Long getId() {
@@ -55,12 +60,6 @@ public class Seat {
 
     public SeatNumber getSeatNumber() {
         return seatNumber;
-    }
-
-    private void setTheater(Theater theater) {
-        this.theater = theater;
-        if(!this.theater.getSeats().contains(this))
-            this.theater.getSeats().add(this);
     }
 
     public void setState(SeatState state) {

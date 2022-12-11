@@ -1,6 +1,11 @@
-package services;
+package movie_reservation.services;
 
 import movie_reservation.data.MovieDTO;
+import movie_reservation.request_dtos.MovieRequest;
+import movie_reservation.response_dtos.MovieResponse;
+import movie_reservation.types.Genre;
+
+import java.util.List;
 
 public interface MovieService {
     /**
@@ -12,5 +17,9 @@ public interface MovieService {
      * @param movie
      */
     void registerMovie(MovieDTO movie);
-    void findMovies();
+    MovieResponse findMovieByTitle(String movieTitle);
+    List<MovieResponse> findMoviesBy(String directorName, String actorName, String year);
+    List<MovieResponse> findMoviesByGenre(Genre genre);
+    List<MovieResponse> findAllMovies();
+    void removeMovie(MovieRequest movie);
 }

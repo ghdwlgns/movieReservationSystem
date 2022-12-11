@@ -1,12 +1,16 @@
 package movie_reservation.entities;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import movie_reservation.types.Address;
 
 import javax.persistence.*;
-import java.util.LinkedList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@Getter
 public class User extends UploadedTime {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
@@ -19,36 +23,13 @@ public class User extends UploadedTime {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList;
 
-    public User() {
-
-    }
-
-    public User(String name, Long age, String city, String street, String zipCode) {
+    public User(String name, Long age, Address address, List<Reservation> reservationList, LocalDateTime dateCreated, LocalDateTime lastModified) {
         this.name = name;
         this.age = age;
-        address = new Address(city, street, zipCode);
-        reservationList = new LinkedList<>();
-        create();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getAge() {
-        return age;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public List<Reservation> getReservationList() {
-        return this.reservationList;
+        this.address = address;
+        this.reservationList = reservationList;
+        create(dateCreated);
+        modify(lastModified);
     }
 
     public void changeAge(Long age) {
