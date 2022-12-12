@@ -1,12 +1,18 @@
 package movie_reservation.response_dtos;
 
-import movie_reservation.entities.ReservedSeat;
-import movie_reservation.entities.Screen;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class ScreenResponse {
-
+    private String movieTitle;
+    private String floor;
+    private String theaterName;
+    private LocalTime startTime;
+    private LocalTime endTime;
 }

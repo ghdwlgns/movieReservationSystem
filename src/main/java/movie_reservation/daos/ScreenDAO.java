@@ -1,13 +1,16 @@
 package movie_reservation.daos;
 
 import movie_reservation.entities.Screen;
-import movie_reservation.entities.Theater;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ScreenDAO {
     void addScreen(Screen screen);
     List<Screen> findScreens();
-    List<Screen> findScreensByStartTime(String startTime);
+    List<Screen> findScreensByStartTime(LocalTime startTime);
     List<Screen> findScreensByMovieTitle(String movieTitle);
+    Screen findScreenByMovieTitleAndStartTime(String movieTitle, LocalTime startTime);
+    void removeScreen(String movieTitle, LocalTime startTime);
+    void removeAllScreens();
 }

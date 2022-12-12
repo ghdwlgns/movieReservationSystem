@@ -2,6 +2,8 @@ package movie_reservation.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import movie_reservation.response_dtos.ReservationResponse;
+import movie_reservation.types.SeatNumber;
 import movie_reservation.types.State;
 
 import javax.persistence.*;
@@ -29,11 +31,11 @@ public class Reservation {
     @JoinColumn(name = "SCREEN_ID")
     private Screen screen;
 
-    public Reservation(User user, Screen screen, List<ReservedSeat> reservedSeats) {
+    public Reservation(User user, Screen screen) {
         setUser(user);
         setScreen(screen);
         state = State.RESERVED;
-        this.reservedSeats = reservedSeats;
+        this.reservedSeats = new ArrayList<>();
     }
 
     private void setScreen(Screen screen) {
@@ -46,5 +48,21 @@ public class Reservation {
 
         if(!this.user.getReservationList().contains(this))
             this.user.getReservationList().add(this);
+    }
+
+    public void cancelThis() {
+        state = State.CANCELED;
+    }
+
+    public void expireThis() {
+        state = State.EXPIRED;
+    }
+
+    public ReservationResponse toResponse() {
+        List<SeatNumber> reservedSeatList = new ArrayList<>();
+        for(ReservedSeat reservedSeat : reservedSeats)
+            reservedSeatList.add(reservedSeat.getSeat().getSeatNumber());
+
+        return new ReservationResponse(user.getName(), state, screen.toScreenDTO(), reservedSeatList);
     }
 }

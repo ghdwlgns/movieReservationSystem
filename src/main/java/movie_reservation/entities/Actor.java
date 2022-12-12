@@ -1,5 +1,6 @@
 package movie_reservation.entities;
 
+import movie_reservation.response_dtos.ActorResponse;
 import movie_reservation.types.Filmography;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class Actor extends MovieStar {
     private Long id;
 
     private BigDecimal height;
-    @Column(unique = true, nullable = true)
+    @Column(unique = true)
     private String instagramId;
     @OneToMany(mappedBy = "actor")
     private List<ActorRole> actorRoles;
@@ -58,5 +59,9 @@ public class Actor extends MovieStar {
 
     public String getInstagramId() {
         return instagramId;
+    }
+
+    public ActorResponse toResponse() {
+        return new ActorResponse(getName(), getBirth().toString(), height, instagramId, getFilmographyList());
     }
 }

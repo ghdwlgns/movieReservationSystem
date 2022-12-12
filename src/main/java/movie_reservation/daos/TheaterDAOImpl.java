@@ -5,8 +5,6 @@ import movie_reservation.entities.QTheater;
 import movie_reservation.entities.Theater;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.List;
 
 public class TheaterDAOImpl implements TheaterDAO {

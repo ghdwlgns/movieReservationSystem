@@ -2,10 +2,12 @@ package movie_reservation.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import movie_reservation.response_dtos.UserResponse;
 import movie_reservation.types.Address;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,11 +25,11 @@ public class User extends UploadedTime {
     @OneToMany(mappedBy = "user")
     private List<Reservation> reservationList;
 
-    public User(String name, Long age, Address address, List<Reservation> reservationList, LocalDateTime dateCreated, LocalDateTime lastModified) {
+    public User(String name, Long age, Address address, LocalDateTime dateCreated, LocalDateTime lastModified) {
         this.name = name;
         this.age = age;
         this.address = address;
-        this.reservationList = reservationList;
+        this.reservationList = new ArrayList<>();
         create(dateCreated);
         modify(lastModified);
     }
@@ -38,5 +40,9 @@ public class User extends UploadedTime {
 
     public void changeAddress(Address address) {
         this.address = address;
+    }
+
+    public UserResponse toResponse() {
+        return new UserResponse(name, age, address);
     }
 }

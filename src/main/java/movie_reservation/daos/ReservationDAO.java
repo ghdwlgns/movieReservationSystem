@@ -1,7 +1,9 @@
 package movie_reservation.daos;
 
 import movie_reservation.entities.Reservation;
+import movie_reservation.types.State;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationDAO {
@@ -11,4 +13,10 @@ public interface ReservationDAO {
      */
 
     void addReservation(Reservation reservation);
+    List<Reservation> findReservationsByUser(String userName);
+    List<Reservation> findReservationsByState(String userName, State state);
+    Reservation findReservation(String userName, String movieTitle, LocalTime startTime);
+    void cancelReservation(String userName, String movieTitle, LocalTime startTime);
+
+    void expireReservation(String userName, String movieTitle, LocalTime endTime);
 }

@@ -1,31 +1,48 @@
 package movie_reservation.daos;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import movie_reservation.entities.QSeat;
-import movie_reservation.entities.Seat;
-import movie_reservation.entities.Theater;
+import movie_reservation.entities.*;
 import movie_reservation.types.SeatNumber;
 import movie_reservation.types.SeatState;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.List;
 
 public class SeatDAOImpl implements SeatDAO {
     private EntityManager entityManager;
     private JPAQueryFactory queryFactory;
     private QSeat qSeat;
+    private QReservedSeat qReservedSeat;
 
     public SeatDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
         queryFactory = new JPAQueryFactory(this.entityManager);
         qSeat = new QSeat("seat");
+        qReservedSeat = new QReservedSeat("reservedSeat");
     }
 
     @Override
     public void addSeat(Seat seat) {
         entityManager.persist(seat);
+    }
+
+    @Override
+    public Seat findSeatByTheaterAndSeatNumber(Theater theater, SeatNumber seatNumber) {
+        return queryFactory.selectFrom(qSeat)
+                .where(qSeat.theater.eq(theater), qSeat.seatNumber.eq(seatNumber))
+                .fetchFirst();
+    }
+
+    @Override
+    public List<Seat> findSeatsByScreen(Screen screen) {
+        // 해당 상영의 예약 안된 자리만 보여줌
+        return queryFactory.select(qSeat)
+                .from()
+                .where(qSeat.theater.screens.contains(screen),
+                        qSeat.seatNumber.ne(qReservedSeat.seat.seatNumber),
+                        qReservedSeat.screen.eq(screen))
+                .orderBy(qSeat.seatNumber.col.asc(), qSeat.seatNumber.row.asc())
+                .fetch();
     }
 
     @Override

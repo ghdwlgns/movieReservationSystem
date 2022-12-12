@@ -1,13 +1,15 @@
 package movie_reservation.response_dtos;
 
-import movie_reservation.entities.Reservation;
-import movie_reservation.entities.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import movie_reservation.types.Address;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class UserResponse {
-
+    private String userName;
+    private Long age;
+    private Address address;
 }

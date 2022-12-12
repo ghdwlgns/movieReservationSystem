@@ -2,6 +2,7 @@ package movie_reservation.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import movie_reservation.response_dtos.TheaterResponse;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -24,10 +25,14 @@ public class Theater {
     @OneToMany(mappedBy = "theater")
     private List<Seat> seats;
 
-    public Theater(String theaterName, String floor, List<Screen> screens, List<Seat> seats) {
+    public Theater(String theaterName, String floor) {
         this.theaterName = theaterName;
         this.floor = floor;
-        this.screens = screens;
-        this.seats = seats;
+        this.screens = new ArrayList<>();
+        this.seats = new ArrayList<>();
+    }
+
+    public TheaterResponse toResponse() {
+        return new TheaterResponse(theaterName, floor);
     }
 }

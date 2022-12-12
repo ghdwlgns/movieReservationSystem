@@ -5,8 +5,6 @@ import movie_reservation.entities.QReservedSeat;
 import movie_reservation.entities.ReservedSeat;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 public class ReservedSeatDAOImpl implements ReservedSeatDAO {
     private EntityManager entityManager;

@@ -2,6 +2,8 @@ package movie_reservation.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import movie_reservation.data.ScreenDTO;
+import movie_reservation.response_dtos.ScreenResponse;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -55,5 +57,13 @@ public class Screen {
 
     public void reserveScreen(Reservation reservation) {
         this.reservation = reservation;
+    }
+
+    public ScreenDTO toScreenDTO() {
+        return new ScreenDTO(movie.getTitle(), theater.getTheaterName(), theater.getFloor(), startTime, endTime);
+    }
+
+    public ScreenResponse toResponse() {
+        return new ScreenResponse(movie.getTitle(), theater.getFloor(), theater.getTheaterName(), startTime, endTime);
     }
 }

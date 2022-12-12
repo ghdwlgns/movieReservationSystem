@@ -3,12 +3,8 @@ package movie_reservation.data;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import movie_reservation.entities.ReservedSeat;
-import movie_reservation.entities.Screen;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor

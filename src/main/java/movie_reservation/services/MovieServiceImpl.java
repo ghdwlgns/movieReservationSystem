@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MovieServiceImpl implements MovieService {
-    private MovieDAOImpl movieDAO;
-    private DirectorDAOImpl directorDAO;
-    private ActorDAOImpl actorDAO;
-    private ActorRoleDAOImpl actorRoleDAO;
-    private TheaterDAOImpl theaterDAO;
-    private ScreenDAOImpl screenDAO;
+    private MovieDAO movieDAO;
+    private DirectorDAO directorDAO;
+    private ActorDAO actorDAO;
+    private ActorRoleDAO actorRoleDAO;
+    private TheaterDAO theaterDAO;
+    private ScreenDAO screenDAO;
     private QueryIngredients query;
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
@@ -52,7 +52,7 @@ public class MovieServiceImpl implements MovieService {
     public void registerMovie(MovieDTO movie) {
         try {
             entityTransaction.begin();
-            Movie movieConverted = movieDtoToMovie(movie);
+            Movie movieConverted = toMovie(movie);
 
             extractActorRole(movie, movieConverted);
 
@@ -69,7 +69,9 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieResponse findMovieByTitle(String movieTitle) {
-        Movie movie = movieDAO.findMovie(movieTitle);
+        Movie movie = null;
+
+        movie = movieDAO.findMovie(movieTitle);
 
         return new MovieResponse(movie.getTitle(), movie.getReleaseDate(), movie.getGenre(), movie.getRunningTime());
     }
@@ -121,15 +123,22 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public void removeMovie(MovieRequest movie) {
-        movieDAO.removeMovie(movie.getMovieTitle());
+        try {
+            entityTransaction.begin();
+            movieDAO.removeMovie(movie.getMovieTitle());
+            entityTransaction.commit();
+        } catch(RollbackException e) {
+            e.printStackTrace();
+            entityTransaction.rollback();
+        }
     }
 
-    private Movie movieDtoToMovie(MovieDTO movieDTO) {
+    private Movie toMovie(MovieDTO movieDTO) {
         String title = movieDTO.getTitle();
         String releaseDate = movieDTO.getReleaseDate();
         Genre genre = movieDTO.getGenre();
         Long runningTime = movieDTO.getRunningTime();
-        String directorName = movieDTO.getDirector().getName();
+        String directorName = movieDTO.getDirectorName();
         LocalDateTime dateCreated = movieDTO.getDateCreated();
         LocalDateTime dateModified = movieDTO.getDateModified();
 

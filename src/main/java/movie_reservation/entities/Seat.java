@@ -1,9 +1,11 @@
 package movie_reservation.entities;
 
+import movie_reservation.response_dtos.SeatResponse;
 import movie_reservation.types.SeatNumber;
 import movie_reservation.types.SeatState;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,11 +31,11 @@ public class Seat {
 
     }
 
-    public Seat(Theater theater, SeatNumber seatNumber, List<ReservedSeat> reservedSeats) {
+    public Seat(Theater theater, SeatNumber seatNumber) {
         setTheater(theater);
         this.seatNumber = seatNumber;
         state = SeatState.AVAILABLE;
-        this.reservedSeats = reservedSeats;
+        this.reservedSeats = new ArrayList<>();
     }
 
     private void setTheater(Theater theater) {
@@ -64,5 +66,9 @@ public class Seat {
 
     public void setState(SeatState state) {
         this.state = state;
+    }
+
+    public SeatResponse toResponse() {
+        return new SeatResponse(theater.toResponse(), seatNumber, state);
     }
 }

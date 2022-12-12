@@ -5,8 +5,6 @@ import movie_reservation.entities.QScreen;
 import movie_reservation.entities.Screen;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -34,11 +32,9 @@ public class ScreenDAOImpl implements ScreenDAO {
     }
 
     @Override
-    public List<Screen> findScreensByStartTime(String startTime) {
-        LocalTime localStartTime = stringToLocalTime(startTime);
-
+    public List<Screen> findScreensByStartTime(LocalTime startTime) {
         return queryFactory.selectFrom(qScreen)
-                .where(qScreen.startTime.eq(localStartTime))
+                .where(qScreen.startTime.eq(startTime))
                 .orderBy(qScreen.movie.title.asc())
                 .fetch();
     }
@@ -49,6 +45,34 @@ public class ScreenDAOImpl implements ScreenDAO {
                 .where(qScreen.movie.title.eq(movieTitle))
                 .orderBy(qScreen.movie.title.asc())
                 .fetch();
+    }
+
+    @Override
+    public Screen findScreenByMovieTitleAndStartTime(String movieTitle, LocalTime startTime) {
+        return queryFactory.selectFrom(qScreen)
+                .where(qScreen.movie.title.eq(movieTitle), qScreen.startTime.eq(startTime))
+                .fetchFirst();
+    }
+
+    @Override
+    public void removeScreen(String movieTitle, LocalTime startTime) {
+        Screen screen = queryFactory.selectFrom(qScreen)
+                .where(qScreen.movie.title.eq(movieTitle), qScreen.startTime.eq(startTime))
+                .fetchFirst();
+        entityManager.remove(screen);
+        entityManager.flush();
+    }
+
+    @Override
+    public void removeAllScreens() {
+        List<Screen> screens = queryFactory.selectFrom(qScreen)
+                .fetch();
+
+        for(Screen screen : screens) {
+            entityManager.remove(screen);
+        }
+
+        entityManager.flush();
     }
 
     private LocalTime stringToLocalTime(String time) {

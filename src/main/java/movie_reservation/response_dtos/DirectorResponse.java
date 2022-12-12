@@ -1,13 +1,18 @@
 package movie_reservation.response_dtos;
 
-import movie_reservation.entities.Director;
-import movie_reservation.entities.Movie;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import movie_reservation.types.Filmography;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class DirectorResponse {
-
+    private String name;
+    private String birth;
+    private String birthPlace;
+    private List<Filmography> filmographyList;
 }

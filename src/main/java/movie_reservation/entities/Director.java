@@ -1,5 +1,6 @@
 package movie_reservation.entities;
 
+import movie_reservation.response_dtos.DirectorResponse;
 import movie_reservation.types.Filmography;
 
 import javax.persistence.*;
@@ -50,5 +51,9 @@ public class Director extends MovieStar {
 
     public String getBirthPlace() {
         return birthPlace;
+    }
+
+    public DirectorResponse toResponse() {
+        return new DirectorResponse(getName(), getBirth().toString(), birthPlace, getFilmographyList());
     }
 }

@@ -1,14 +1,20 @@
 package movie_reservation.response_dtos;
 
-import movie_reservation.entities.Actor;
-import movie_reservation.entities.ActorRole;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import movie_reservation.types.Filmography;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class ActorResponse {
-
+    private String name;
+    private String birth;
+    private BigDecimal height;
+    private String instagramId;
+    private List<Filmography> filmographyList;
 }
