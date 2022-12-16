@@ -18,19 +18,17 @@ public class QActor extends EntityPathBase<Actor> {
 
     private static final long serialVersionUID = 463509049L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QActor actor = new QActor("actor");
 
-    public final QMovieStar _super;
+    public final QMovieStar _super = new QMovieStar(this);
 
     public final ListPath<ActorRole, QActorRole> actorRoles = this.<ActorRole, QActorRole>createList("actorRoles", ActorRole.class, QActorRole.class, PathInits.DIRECT2);
 
     //inherited
-    public final DatePath<java.time.LocalDate> birth;
+    public final DatePath<java.time.LocalDate> birth = _super.birth;
 
-    // inherited
-    public final movie_reservation.types.QFilmography filmography;
+    //inherited
+    public final ListPath<movie_reservation.types.Filmography, movie_reservation.types.QFilmography> filmographyList = _super.filmographyList;
 
     public final NumberPath<java.math.BigDecimal> height = createNumber("height", java.math.BigDecimal.class);
 
@@ -39,30 +37,18 @@ public class QActor extends EntityPathBase<Actor> {
     public final StringPath instagramId = createString("instagramId");
 
     //inherited
-    public final StringPath name;
+    public final StringPath name = _super.name;
 
     public QActor(String variable) {
-        this(Actor.class, forVariable(variable), INITS);
+        super(Actor.class, forVariable(variable));
     }
 
     public QActor(Path<? extends Actor> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QActor(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QActor(PathMetadata metadata, PathInits inits) {
-        this(Actor.class, metadata, inits);
-    }
-
-    public QActor(Class<? extends Actor> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this._super = new QMovieStar(type, metadata, inits);
-        this.birth = _super.birth;
-        this.filmography = _super.filmography;
-        this.name = _super.name;
+        super(Actor.class, metadata);
     }
 
 }

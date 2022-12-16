@@ -9,9 +9,10 @@ import movie_reservation.types.SeatState;
 import java.util.List;
 
 public interface SeatService {
-    void registerSeats(List<SeatDTO> seatDTOList);
+    void registerSeat(SeatDTO seatDTO);
     List<SeatResponse> findSeatsByScreen(ScreenRequest screenRequest);
     List<SeatResponse> findAllSeats();
     void updateSeatState(List<SeatNumber> seatNumberList, SeatState seatState);
     void removeAllSeats();
+    void emClose();
 }

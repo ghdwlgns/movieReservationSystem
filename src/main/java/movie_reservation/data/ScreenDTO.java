@@ -11,8 +11,8 @@ import java.time.LocalTime;
 @Getter
 public class ScreenDTO {
     private String movieTitle;
-    private String theaterName;
     private String theaterFloor;
+    private String theaterName;
     private LocalTime startTime;
     private LocalTime endTime;
 }

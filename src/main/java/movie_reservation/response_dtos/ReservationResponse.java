@@ -17,4 +17,14 @@ public class ReservationResponse {
     private State state;
     private ScreenDTO screen;
     private List<SeatNumber> reservedSeats;
+
+    @Override
+    public String toString() {
+        return "사용자 이름: " + userName + "\n"
+                + "예약 상태: " + state + "\n"
+                + "영화 제목: " + screen.getMovieTitle() + "\n"
+                + "상영관: " + screen.getTheaterFloor() + " " + screen.getTheaterName() + "\n"
+                + "시작 시간: " + screen.getStartTime() + "\n"
+                + "종료 시간: " + screen.getEndTime();
+    }
 }

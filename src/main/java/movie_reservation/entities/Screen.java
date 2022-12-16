@@ -30,8 +30,6 @@ public class Screen {
 
     @OneToMany(mappedBy = "screen")
     private List<ReservedSeat> reservedSeats;
-    @OneToOne(mappedBy = "reservation")
-    private Reservation reservation;
 
     public Screen(Movie movie, Theater theater, LocalTime startTime, LocalTime endTime) {
         setMovie(movie);
@@ -53,10 +51,6 @@ public class Screen {
 
         if(!this.theater.getScreens().contains(this))
             this.theater.getScreens().add(this);
-    }
-
-    public void reserveScreen(Reservation reservation) {
-        this.reservation = reservation;
     }
 
     public ScreenDTO toScreenDTO() {

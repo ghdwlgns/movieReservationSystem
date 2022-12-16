@@ -13,9 +13,4 @@ import movie_reservation.types.SeatState;
 public class SeatDTO {
     private TheaterDTO theater;
     private SeatNumber seatNumber;
-    private SeatState state;
-
-    public Seat toEntity() {
-        return new Seat(theater.toEntity(), seatNumber);
-    }
 }

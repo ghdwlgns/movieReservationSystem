@@ -10,7 +10,7 @@ public interface ScreenDAO {
     List<Screen> findScreens();
     List<Screen> findScreensByStartTime(LocalTime startTime);
     List<Screen> findScreensByMovieTitle(String movieTitle);
-    Screen findScreenByMovieTitleAndStartTime(String movieTitle, LocalTime startTime);
+    List<Screen> findScreenByMovieTitleAndStartTime(String movieTitle, LocalTime startTime);
     void removeScreen(String movieTitle, LocalTime startTime);
     void removeAllScreens();
 }

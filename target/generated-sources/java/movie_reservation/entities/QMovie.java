@@ -32,7 +32,7 @@ public class QMovie extends EntityPathBase<Movie> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> dateModified = _super.dateModified;
 
-    public final QDirector direct00or;
+    public final QDirector director;
 
     public final EnumPath<movie_reservation.types.Genre> genre = createEnum("genre", movie_reservation.types.Genre.class);
 
@@ -64,7 +64,7 @@ public class QMovie extends EntityPathBase<Movie> {
 
     public QMovie(Class<? extends Movie> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.direct00or = inits.isInitialized("direct00or") ? new QDirector(forProperty("direct00or"), inits.get("direct00or")) : null;
+        this.director = inits.isInitialized("director") ? new QDirector(forProperty("director")) : null;
     }
 
 }

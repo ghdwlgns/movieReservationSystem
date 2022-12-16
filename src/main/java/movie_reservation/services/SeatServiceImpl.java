@@ -1,12 +1,10 @@
 package movie_reservation.services;
 
-import movie_reservation.daos.ScreenDAO;
-import movie_reservation.daos.ScreenDAOImpl;
-import movie_reservation.daos.SeatDAO;
-import movie_reservation.daos.SeatDAOImpl;
+import movie_reservation.daos.*;
 import movie_reservation.data.SeatDTO;
 import movie_reservation.entities.Screen;
 import movie_reservation.entities.Seat;
+import movie_reservation.entities.Theater;
 import movie_reservation.query.QueryIngredients;
 import movie_reservation.request_dtos.ScreenRequest;
 import movie_reservation.response_dtos.SeatResponse;
@@ -16,35 +14,33 @@ import movie_reservation.types.SeatState;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.RollbackException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SeatServiceImpl implements SeatService {
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
-    private QueryIngredients query;
 
     private SeatDAO seatDAO;
     private ScreenDAO screenDAO;
+    private TheaterDAO theaterDAO;
 
     public SeatServiceImpl() {
-        query = new QueryIngredients();
-        entityManager = query.getEntityManager();
+        entityManager = QueryIngredients.getInstance().getEntityManager();
         entityTransaction = entityManager.getTransaction();
 
         seatDAO = new SeatDAOImpl(entityManager);
         screenDAO = new ScreenDAOImpl(entityManager);
+        theaterDAO = new TheaterDAOImpl(entityManager);
     }
 
     @Override
-    public void registerSeats(List<SeatDTO> seatDTOList) {
+    public void registerSeat(SeatDTO seatDTO) {
         try {
             entityTransaction.begin();
 
-            List<Seat> seatList = seatDTOList.stream().map(SeatDTO::toEntity).toList();
-
-            for(Seat seat : seatList) {
-                seatDAO.addSeat(seat);
-            }
+            Theater theater = theaterDAO.findTheater(seatDTO.getTheater().getFloor(), seatDTO.getTheater().getTheaterName());
+            seatDAO.addSeat(new Seat(theater, seatDTO.getSeatNumber()));
 
             entityTransaction.commit();
         } catch(RollbackException e) {
@@ -56,7 +52,7 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public List<SeatResponse> findSeatsByScreen(ScreenRequest screenRequest) {
-        Screen screen = screenDAO.findScreenByMovieTitleAndStartTime(screenRequest.getMovieTitle(), screenRequest.getStarTime());
+        Screen screen = screenDAO.findScreenByMovieTitleAndStartTime(screenRequest.getMovieTitle(), screenRequest.getStarTime()).get(0);
         return seatDAO.findSeatsByScreen(screen).stream()
                 .map(Seat::toResponse)
                 .toList();
@@ -87,6 +83,11 @@ public class SeatServiceImpl implements SeatService {
 
     @Override
     public void removeAllSeats() {
+        seatDAO.removeAllSeats();
+    }
 
+    @Override
+    public void emClose() {
+        entityManager.close();
     }
 }

@@ -17,4 +17,19 @@ public class ActorResponse {
     private BigDecimal height;
     private String instagramId;
     private List<Filmography> filmographyList;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("이름: ").append(name).append("\n")
+                .append("생일: ").append(birth).append("\n")
+                .append("키: ").append(height.toString()).append("\n")
+                .append("인스타그램: ").append(instagramId).append("\n")
+                .append("출연 작품 목록:").append("\n");
+
+        for(Filmography filmography : filmographyList) {
+            sb.append(filmography).append("\n");
+        }
+
+        return sb.toString();
+    }
 }

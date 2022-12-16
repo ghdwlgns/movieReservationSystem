@@ -17,13 +17,11 @@ import java.util.stream.Collectors;
 public class DirectorServiceImpl implements DirectorService {
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
-    private QueryIngredients query;
 
     private DirectorDAO directorDAO;
 
     public DirectorServiceImpl() {
-        query = new QueryIngredients();
-        entityManager = query.getEntityManager();
+        entityManager = QueryIngredients.getInstance().getEntityManager();
         entityTransaction = entityManager.getTransaction();
 
         directorDAO = new DirectorDAOImpl(entityManager);
@@ -88,5 +86,10 @@ public class DirectorServiceImpl implements DirectorService {
             e.printStackTrace();
             entityTransaction.rollback();
         }
+    }
+
+    @Override
+    public void emClose() {
+        entityManager.close();
     }
 }

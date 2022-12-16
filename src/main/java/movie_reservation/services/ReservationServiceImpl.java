@@ -23,15 +23,14 @@ public class ReservationServiceImpl implements ReservationService {
     UserDAO userDAO;
     ReservedSeatDAO reservedSeatDAO;
     SeatDAO seatDAO;
+
     EntityManager entityManager;
     EntityTransaction entityTransaction;
     JPAQueryFactory queryFactory;
-    QueryIngredients query;
     BooleanExpressions booleanExpressions;
 
     public ReservationServiceImpl() {
-        query = new QueryIngredients();
-        entityManager = query.getEntityManager();
+        entityManager = QueryIngredients.getInstance().getEntityManager();
         entityTransaction = entityManager.getTransaction();
         queryFactory = new JPAQueryFactory(entityManager);
 
@@ -50,7 +49,7 @@ public class ReservationServiceImpl implements ReservationService {
         try {
             entityTransaction.begin();
 
-            Screen screenFind = screenDAO.findScreenByMovieTitleAndStartTime(screen.getMovieTitle(), screen.getStartTime());
+            Screen screenFind = screenDAO.findScreenByMovieTitleAndStartTime(screen.getMovieTitle(), screen.getStartTime()).get(0); // 얘는 무조건 하나임
             User user = userDAO.findUser(userName);
             Theater theater = screenFind.getTheater();
             Reservation reservation = new Reservation(user, screenFind);
@@ -108,6 +107,11 @@ public class ReservationServiceImpl implements ReservationService {
             e.printStackTrace();
             entityTransaction.rollback();
         }
+    }
+
+    @Override
+    public void emClose() {
+        entityManager.close();
     }
 
     private void convertToReservedSeats(List<SeatNumber> seatNumbers, Screen screenFind, Theater theater, Reservation reservation) {

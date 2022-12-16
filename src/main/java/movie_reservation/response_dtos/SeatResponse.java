@@ -13,4 +13,9 @@ public class SeatResponse {
     private TheaterResponse theater;
     private SeatNumber seatNumber;
     private SeatState state;
+
+    @Override
+    public String toString() {
+        return seatNumber + ": " + state;
+    }
 }

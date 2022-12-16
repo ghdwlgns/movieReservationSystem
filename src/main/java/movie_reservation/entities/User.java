@@ -36,10 +36,12 @@ public class User extends UploadedTime {
 
     public void changeAge(Long age) {
         this.age = age;
+        modify(LocalDateTime.now());
     }
 
     public void changeAddress(Address address) {
         this.address = address;
+        modify(LocalDateTime.now());
     }
 
     public UserResponse toResponse() {

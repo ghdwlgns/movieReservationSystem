@@ -12,4 +12,5 @@ public interface ActorService {
     List<ActorResponse> findAllActors();
     void updateActorFilmography(String actorName, Filmography filmography);
     void removeActor(String actorName);
+    void emClose();
 }

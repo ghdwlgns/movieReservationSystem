@@ -48,7 +48,7 @@ public class QActorRole extends EntityPathBase<ActorRole> {
 
     public QActorRole(Class<? extends ActorRole> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.actor = inits.isInitialized("actor") ? new QActor(forProperty("actor"), inits.get("actor")) : null;
+        this.actor = inits.isInitialized("actor") ? new QActor(forProperty("actor")) : null;
         this.movie = inits.isInitialized("movie") ? new QMovie(forProperty("movie"), inits.get("movie")) : null;
     }
 

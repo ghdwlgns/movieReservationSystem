@@ -19,9 +19,9 @@ public class QSeatNumber extends BeanPath<SeatNumber> {
 
     public static final QSeatNumber seatNumber = new QSeatNumber("seatNumber");
 
-    public final NumberPath<Long> col = createNumber("col", Long.class);
+    public final StringPath col = createString("col");
 
-    public final ComparablePath<Character> row = createComparable("row", Character.class);
+    public final StringPath hang = createString("hang");
 
     public QSeatNumber(String variable) {
         super(SeatNumber.class, forVariable(variable));

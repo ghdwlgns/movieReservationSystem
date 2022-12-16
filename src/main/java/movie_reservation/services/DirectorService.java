@@ -13,4 +13,5 @@ public interface DirectorService {
     List<DirectorResponse> findAllDirectors();
     void updateDirectorFilmography(String directorName, Filmography filmography);
     void removeDirector(String directorName);
+    void emClose();
 }

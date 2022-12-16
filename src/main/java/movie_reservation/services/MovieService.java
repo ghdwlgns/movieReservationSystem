@@ -22,4 +22,5 @@ public interface MovieService {
     List<MovieResponse> findMoviesByGenre(Genre genre);
     List<MovieResponse> findAllMovies();
     void removeMovie(MovieRequest movie);
+    void emClose();
 }

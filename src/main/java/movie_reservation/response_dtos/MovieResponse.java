@@ -14,10 +14,11 @@ public class MovieResponse {
     private Genre genre;
     private Long runningTime;
 
+    @Override
     public String toString() {
-        return "영화 제목: " + movieTitle + "\n"
-                + "출시일: " + releaseDate + "\n"
-                + "장르: " + genre + "\n"
-                + "상영 시간: " + runningTime;
+        return "영화 제목: " + movieTitle + "\n" +
+                "출시일: " + releaseDate + "\n" +
+                "장르: " + genre + "\n" +
+                "상영 시간: " + runningTime;
     }
 }

@@ -6,6 +6,8 @@ import movie_reservation.entities.*;
 import movie_reservation.types.Casting;
 import movie_reservation.types.Genre;
 
+import java.time.LocalTime;
+
 @NoArgsConstructor
 public class BooleanExpressions {
     public BooleanExpression actorEq(Actor actor) {
@@ -29,7 +31,7 @@ public class BooleanExpressions {
     public BooleanExpression directorEq(Director director) {
         if(director == null)
             return null;
-        return QMovie.movie.direct00or.eq(director);
+        return QMovie.movie.director.eq(director);
     }
 
     public BooleanExpression releaseDateContains(String year) {
@@ -48,5 +50,17 @@ public class BooleanExpressions {
         if(userName == null || userName.equals(""))
             return null;
         return QUser.user.name.eq(userName);
+    }
+
+    public BooleanExpression movieTitleEq(String movieTitle) {
+        if(movieTitle == null || movieTitle.equals(""))
+            return null;
+        return QScreen.screen.movie.title.eq(movieTitle);
+    }
+
+    public BooleanExpression startTimeEq(LocalTime startTime) {
+        if(startTime == null)
+            return null;
+        return QScreen.screen.startTime.eq(startTime);
     }
 }

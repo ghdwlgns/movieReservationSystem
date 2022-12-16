@@ -18,4 +18,5 @@ public interface UserService {
     void modifyUserAge(String userName, Long age);
     void modifyUserAddress(String userName, Address address);
     void removeUser(UserRequest user);
+    void emClose();
 }

@@ -20,11 +20,9 @@ public class UserServiceImpl implements UserService {
 
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
-    private QueryIngredients query;
 
     public UserServiceImpl() {
-        query = new QueryIngredients();
-        entityManager = query.getEntityManager();
+        entityManager = QueryIngredients.getInstance().getEntityManager();
         entityTransaction = entityManager.getTransaction();
 
         userDAO = new UserDAOImpl(entityManager);
@@ -96,5 +94,10 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             entityTransaction.rollback();
         }
+    }
+
+    @Override
+    public void emClose() {
+        entityManager.close();
     }
 }

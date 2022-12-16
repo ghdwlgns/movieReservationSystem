@@ -41,14 +41,14 @@ public class SeatDAOImpl implements SeatDAO {
                 .where(qSeat.theater.screens.contains(screen),
                         qSeat.seatNumber.ne(qReservedSeat.seat.seatNumber),
                         qReservedSeat.screen.eq(screen))
-                .orderBy(qSeat.seatNumber.col.asc(), qSeat.seatNumber.row.asc())
+                .orderBy(qSeat.seatNumber.col.asc(), qSeat.seatNumber.hang.asc())
                 .fetch();
     }
 
     @Override
     public List<Seat> findSeats() {
         return queryFactory.selectFrom(qSeat)
-                .orderBy(qSeat.seatNumber.col.asc(), qSeat.seatNumber.row.asc())
+                .orderBy(qSeat.seatNumber.col.asc(), qSeat.seatNumber.hang.asc())
                 .fetch();
     }
 

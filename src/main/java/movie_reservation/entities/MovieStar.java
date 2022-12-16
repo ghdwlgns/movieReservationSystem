@@ -11,7 +11,7 @@ import java.util.List;
 @MappedSuperclass
 public abstract class MovieStar {
     private String name;
-    @Temporal(TemporalType.DATE)
+
     private LocalDate birth;
     @ElementCollection
     private List<Filmography> filmographyList;

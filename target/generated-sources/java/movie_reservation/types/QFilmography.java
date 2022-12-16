@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -20,9 +19,11 @@ public class QFilmography extends BeanPath<Filmography> {
 
     public static final QFilmography filmography = new QFilmography("filmography");
 
+    public final EnumPath<Casting> casting = createEnum("casting", Casting.class);
+
     public final EnumPath<Job> job = createEnum("job", Job.class);
 
-    public final ListPath<String, StringPath> moviesParticipated = this.<String, StringPath>createList("moviesParticipated", String.class, StringPath.class, PathInits.DIRECT2);
+    public final StringPath movieParticipated = createString("movieParticipated");
 
     public QFilmography(String variable) {
         super(Filmography.class, forVariable(variable));

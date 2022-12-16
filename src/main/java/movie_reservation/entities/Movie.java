@@ -28,7 +28,7 @@ public class Movie extends UploadedTime {
     @OneToMany(mappedBy = "movie")
     @Column(name = "ACTOR_ROLES", nullable = false)
     private List<ActorRole> actorRoles;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "DIRECTOR_ID", nullable = false)
     private Director director;
     @Column(name = "GENRE", nullable = false)

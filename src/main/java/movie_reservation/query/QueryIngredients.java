@@ -5,15 +5,22 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class QueryIngredients {
-    EntityManagerFactory entityManagerFactory;
-    EntityManager entityManager;
+    private final EntityManagerFactory entityManagerFactory;
+    private static QueryIngredients instance = new QueryIngredients();
 
-    public QueryIngredients() {
+    private QueryIngredients() {
         entityManagerFactory = Persistence.createEntityManagerFactory("movie_reservation");
-        entityManager = entityManagerFactory.createEntityManager();
+    }
+
+    public static QueryIngredients getInstance() {
+        return instance;
     }
 
     public EntityManager getEntityManager() {
-        return entityManager;
+        return entityManagerFactory.createEntityManager();
+    }
+
+    public void emfClose() {
+        entityManagerFactory.close();
     }
 }

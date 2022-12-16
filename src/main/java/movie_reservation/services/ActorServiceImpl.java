@@ -17,13 +17,10 @@ import java.util.stream.Collectors;
 public class ActorServiceImpl implements ActorService {
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
-    private QueryIngredients query;
-
     private ActorDAO actorDAO;
 
     public ActorServiceImpl() {
-        query = new QueryIngredients();
-        entityManager = query.getEntityManager();
+        entityManager = QueryIngredients.getInstance().getEntityManager();
         entityTransaction = entityManager.getTransaction();
 
         actorDAO = new ActorDAOImpl(entityManager);
@@ -82,5 +79,10 @@ public class ActorServiceImpl implements ActorService {
             e.printStackTrace();
             entityTransaction.rollback();
         }
+    }
+
+    @Override
+    public void emClose() {
+        entityManager.close();
     }
 }

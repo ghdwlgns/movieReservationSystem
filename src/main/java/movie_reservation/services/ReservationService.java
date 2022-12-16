@@ -19,4 +19,5 @@ public interface ReservationService {
     List<ReservationResponse> findReservationsByState(String userName, State state);
     void cancelReservation(ReservationDTO reservation);
     void expireReservation(ReservationDTO reservation);
+    void emClose();
 }

@@ -18,35 +18,24 @@ public class QMovieStar extends EntityPathBase<MovieStar> {
 
     private static final long serialVersionUID = -1051997210L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QMovieStar movieStar = new QMovieStar("movieStar");
 
     public final DatePath<java.time.LocalDate> birth = createDate("birth", java.time.LocalDate.class);
 
-    public final movie_reservation.types.QFilmography filmography;
+    public final ListPath<movie_reservation.types.Filmography, movie_reservation.types.QFilmography> filmographyList = this.<movie_reservation.types.Filmography, movie_reservation.types.QFilmography>createList("filmographyList", movie_reservation.types.Filmography.class, movie_reservation.types.QFilmography.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
 
     public QMovieStar(String variable) {
-        this(MovieStar.class, forVariable(variable), INITS);
+        super(MovieStar.class, forVariable(variable));
     }
 
     public QMovieStar(Path<? extends MovieStar> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QMovieStar(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QMovieStar(PathMetadata metadata, PathInits inits) {
-        this(MovieStar.class, metadata, inits);
-    }
-
-    public QMovieStar(Class<? extends MovieStar> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.filmography = inits.isInitialized("filmography") ? new movie_reservation.types.QFilmography(forProperty("filmography")) : null;
+        super(MovieStar.class, metadata);
     }
 
 }

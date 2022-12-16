@@ -28,8 +28,6 @@ public class QScreen extends EntityPathBase<Screen> {
 
     public final QMovie movie;
 
-    public final QReservation reservation;
-
     public final ListPath<ReservedSeat, QReservedSeat> reservedSeats = this.<ReservedSeat, QReservedSeat>createList("reservedSeats", ReservedSeat.class, QReservedSeat.class, PathInits.DIRECT2);
 
     public final TimePath<java.time.LocalTime> startTime = createTime("startTime", java.time.LocalTime.class);
@@ -55,7 +53,6 @@ public class QScreen extends EntityPathBase<Screen> {
     public QScreen(Class<? extends Screen> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.movie = inits.isInitialized("movie") ? new QMovie(forProperty("movie"), inits.get("movie")) : null;
-        this.reservation = inits.isInitialized("reservation") ? new QReservation(forProperty("reservation"), inits.get("reservation")) : null;
         this.theater = inits.isInitialized("theater") ? new QTheater(forProperty("theater")) : null;
     }
 

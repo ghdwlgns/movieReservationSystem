@@ -14,7 +14,7 @@ public class Seat {
     @Column(name = "SEAT_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "THEATER_ID")
     private Theater theater;
     @Embedded

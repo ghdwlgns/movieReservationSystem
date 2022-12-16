@@ -18,7 +18,6 @@ public class MovieDTO {
     private String directorName;
     private Genre genre;
     private Long runningTime;
-    private List<ScreenDTO> screens;
     private LocalDateTime dateCreated;
     private LocalDateTime dateModified;
 }

@@ -28,23 +28,24 @@ public class MovieServiceImpl implements MovieService {
     private ActorRoleDAO actorRoleDAO;
     private TheaterDAO theaterDAO;
     private ScreenDAO screenDAO;
-    private QueryIngredients query;
+
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
     private JPAQueryFactory queryFactory;
     private BooleanExpressions booleanExpressions;
 
     public MovieServiceImpl() {
-        query = new QueryIngredients();
-        entityManager = query.getEntityManager();
+        entityManager = QueryIngredients.getInstance().getEntityManager();
         entityTransaction = entityManager.getTransaction();
         queryFactory = new JPAQueryFactory(entityManager);
+
         movieDAO = new MovieDAOImpl(entityManager);
         directorDAO = new DirectorDAOImpl(entityManager);
         actorDAO = new ActorDAOImpl(entityManager);
         actorRoleDAO = new ActorRoleDAOImpl(entityManager);
         theaterDAO = new TheaterDAOImpl(entityManager);
         screenDAO = new ScreenDAOImpl(entityManager);
+
         booleanExpressions = new BooleanExpressions();
     }
 
@@ -55,8 +56,6 @@ public class MovieServiceImpl implements MovieService {
             Movie movieConverted = toMovie(movie);
 
             extractActorRole(movie, movieConverted);
-
-            extractScreen(movie, movieConverted);
 
             movieDAO.addMovie(movieConverted);
 
@@ -104,7 +103,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public List<MovieResponse> findMoviesByGenre(Genre genre) {
-        List<MovieResponse> movieResponseList = new ArrayList<>();
         List<Movie> moviesByGenre = movieDAO.findMoviesByGenre(genre);
 
         return moviesByGenre.stream()
@@ -145,16 +143,6 @@ public class MovieServiceImpl implements MovieService {
         return new Movie(title, releaseDate, genre, runningTime, directorDAO.findDirector(directorName), dateCreated, dateModified);
     }
 
-    private void extractScreen(MovieDTO movie, Movie movieConverted) {
-        for(ScreenDTO screenDTO : movie.getScreens()) {
-            Theater theater = theaterDAO.findTheater(screenDTO.getTheaterFloor(), screenDTO.getTheaterName());
-
-            Screen screen = new Screen(movieConverted, theater, screenDTO.getStartTime(), screenDTO.getEndTime());
-
-            screenDAO.addScreen(screen);
-        }
-    }
-
     private void extractActorRole(MovieDTO movie, Movie movieConverted) {
         for(ActorRoleDTO actorRoleDTO : movie.getActorRoles()) {
             Actor actor = actorDAO.findActor(actorRoleDTO.getActorName());
@@ -163,5 +151,10 @@ public class MovieServiceImpl implements MovieService {
 
             actorRoleDAO.addActorRole(actorRole);
         }
+    }
+
+    @Override
+    public void emClose() {
+        entityManager.close();
     }
 }

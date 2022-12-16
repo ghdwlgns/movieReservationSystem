@@ -1,8 +1,7 @@
 package movie_reservation.daos;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import movie_reservation.entities.Actor;
-import movie_reservation.entities.QActor;
+import movie_reservation.entities.*;
 import movie_reservation.types.Filmography;
 
 import javax.persistence.*;
@@ -12,11 +11,13 @@ public class ActorDAOImpl implements ActorDAO {
     private EntityManager entityManager;
     private JPAQueryFactory queryFactory;
     private QActor qActor;
+    private QActorRole qActorRole;
 
     public ActorDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
         queryFactory = new JPAQueryFactory(this.entityManager);
         qActor = new QActor("actor");
+        qActorRole = new QActorRole("actorRole");
     }
 
     @Override
@@ -32,9 +33,10 @@ public class ActorDAOImpl implements ActorDAO {
     }
 
     @Override
-    public List<Actor> findActorsByMovie(String movieTitle) {
-        return queryFactory.selectFrom(qActor)
-                .where(qActor.filmography.moviesParticipated.contains(movieTitle))
+    public List<Actor> findActorsByMovie(Movie movie) {
+        return queryFactory.select(qActor)
+                .from(qActor, qActorRole)
+                .where(qActorRole.movie.eq(movie), qActor.eq(qActorRole.actor))
                 .orderBy(qActor.name.asc())
                 .fetch();
     }

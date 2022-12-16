@@ -40,7 +40,6 @@ public class Reservation {
 
     private void setScreen(Screen screen) {
         this.screen = screen;
-        this.screen.reserveScreen(this);
     }
 
     private void setUser(User user) {

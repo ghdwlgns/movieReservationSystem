@@ -3,6 +3,7 @@ package movie_reservation.daos;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import movie_reservation.entities.QScreen;
 import movie_reservation.entities.Screen;
+import movie_reservation.query.BooleanExpressions;
 
 import javax.persistence.EntityManager;
 import java.time.LocalTime;
@@ -12,11 +13,13 @@ public class ScreenDAOImpl implements ScreenDAO {
     private EntityManager entityManager;
     private JPAQueryFactory queryFactory;
     private QScreen qScreen;
+    private BooleanExpressions be;
 
     public ScreenDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
         queryFactory = new JPAQueryFactory(this.entityManager);
         qScreen = new QScreen("screen");
+        be = new BooleanExpressions();
     }
 
     @Override
@@ -48,16 +51,17 @@ public class ScreenDAOImpl implements ScreenDAO {
     }
 
     @Override
-    public Screen findScreenByMovieTitleAndStartTime(String movieTitle, LocalTime startTime) {
+    public List<Screen> findScreenByMovieTitleAndStartTime(String movieTitle, LocalTime startTime) {
         return queryFactory.selectFrom(qScreen)
-                .where(qScreen.movie.title.eq(movieTitle), qScreen.startTime.eq(startTime))
-                .fetchFirst();
+                .where(be.movieTitleEq(movieTitle), be.startTimeEq(startTime))
+                .orderBy(qScreen.movie.title.asc())
+                .fetch();
     }
 
     @Override
     public void removeScreen(String movieTitle, LocalTime startTime) {
         Screen screen = queryFactory.selectFrom(qScreen)
-                .where(qScreen.movie.title.eq(movieTitle), qScreen.startTime.eq(startTime))
+                .where(be.movieTitleEq(movieTitle), be.startTimeEq(startTime))
                 .fetchFirst();
         entityManager.remove(screen);
         entityManager.flush();
@@ -74,6 +78,8 @@ public class ScreenDAOImpl implements ScreenDAO {
 
         entityManager.flush();
     }
+
+
 
     private LocalTime stringToLocalTime(String time) {
         // String format: hh시 mm분(초는 무조건 0.0)

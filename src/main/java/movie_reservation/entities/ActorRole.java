@@ -12,10 +12,10 @@ public class ActorRole {
     @Column(name = "ACTOR_ROLE_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ACTOR_ID")
     private Actor actor;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "MOVIE_ID")
     private Movie movie;
     @Enumerated(EnumType.STRING)

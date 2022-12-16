@@ -4,15 +4,15 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class SeatNumber {
-    private Character row;
-    private Long col;
+    private String hang;
+    private String col;
 
     public SeatNumber() {
 
     }
 
-    public SeatNumber(Character row, Long col) {
-        this.row = row;
+    public SeatNumber(String hang, String col) {
+        this.hang = hang;
         this.col = col;
     }
 }
