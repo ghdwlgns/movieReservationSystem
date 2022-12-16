@@ -51,14 +51,14 @@ public class SystemFindController {
     public void searchMovie() {
         movieService = new MovieServiceImpl();
 
-        System.out.println("1. 영화 제목으로 검색");
-        System.out.println("2. 배우 이름으로 검색");
-        System.out.println("3. 감독 이름으로 검색");
-        System.out.println("4. 출시년도로 검색");
-        System.out.println("5. 배우 이름과 감독이름으로 검색");
-        System.out.println("6. 배우 이름과 출시년도로 검색");
-        System.out.println("7. 감독 이름과 출시년도로 검색");
-        System.out.println("8. 세 조건 모두로 검색");
+        System.out.println("1. 영화 제목으로 검색 (입력 예시: 바람과 함께 사라지다)");
+        System.out.println("2. 배우 이름으로 검색 (입력 예시: 홍길동)");
+        System.out.println("3. 감독 이름으로 검색 (입력 예시: 홍길동)");
+        System.out.println("4. 출시년도로 검색 (입력 예시: 2022)");
+        System.out.println("5. 배우 이름과 감독이름으로 검색 (입력 예시(배우 이름을 먼저 입력해주세요!): 김첨지 김갑자)");
+        System.out.println("6. 배우 이름과 출시년도로 검색 (입력 예시(배우 이름을 먼저 입력해주세요!): 김첨지 2022)");
+        System.out.println("7. 감독 이름과 출시년도로 검색 (입력 예시(감독 이름을 먼저 입력해주세요!: 김갑자 2022)");
+        System.out.println("8. 세 조건 모두로 검색 (입력 예시(배우, 감독, 년도 순으로 입력해주세요!): 김첨지 김갑자 2022)");
         System.out.println("검색 조건을 선택해주세요: ");
 
         List<MovieResponse> movieResponseList = new ArrayList<>();
@@ -88,7 +88,6 @@ public class SystemFindController {
     }
 
     private MovieResponse findMovieByOption1(String s) {
-        System.out.println("입력 예시: 바람과 함께 사라지다");
         return movieService.findMovieByTitle(s);
     }
 
@@ -97,34 +96,27 @@ public class SystemFindController {
 
         switch(i) {
             case 2 -> {
-                System.out.println("입력 예시: 홍길동");
                 movieResponseList = movieService.findMoviesBy("", s, "");
             }
             case 3 -> {
-                System.out.println("입력 예시: 홍길동");
                 movieResponseList = movieService.findMoviesBy(s, "", "");
             }
             case 4 -> {
-                System.out.println("입력 예시: 2022");
                 movieResponseList = movieService.findMoviesBy("", "", s);
             }
             case 5 -> {
-                System.out.println("입력 예시(배우 이름을 먼저 입력해주세요!): 김첨지 김갑자");
                 String[] actorNDirectorName = s.split(" ");
                 movieResponseList = movieService.findMoviesBy(actorNDirectorName[1], actorNDirectorName[0], "");
             }
             case 6 -> {
-                System.out.println("입력 예시(배우 이름을 먼저 입력해주세요!): 김첨지 2022");
                 String[] nameNYear = s.split(" ");
                 movieResponseList = movieService.findMoviesBy("", nameNYear[0], nameNYear[1]);
             }
             case 7 -> {
-                System.out.println("입력 예시(감독 이름을 먼저 입력해주세요!: 김갑자 2022");
                 String[] nameNYear = s.split(" ");
                 movieResponseList = movieService.findMoviesBy(nameNYear[0], "", nameNYear[1]);
             }
             case 8 -> {
-                System.out.println("입력 예시(배우, 감독, 년도 순으로 입력해주세요!): 김첨지 김갑자 2022");
                 String[] nameNYear = s.split(" ");
                 movieResponseList = movieService.findMoviesBy(nameNYear[1], nameNYear[0], nameNYear[2]);
             }
