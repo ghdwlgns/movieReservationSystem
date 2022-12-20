@@ -53,6 +53,7 @@ public class ReservationServiceImpl implements ReservationService {
             User user = userDAO.findUser(userName);
             Theater theater = screenFind.getTheater();
             Reservation reservation = new Reservation(user, screenFind);
+            reservationDAO.addReservation(reservation);
 
             convertToReservedSeats(seatNumbers, screenFind, theater, reservation);
 

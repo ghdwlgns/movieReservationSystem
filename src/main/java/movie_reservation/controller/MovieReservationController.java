@@ -7,6 +7,7 @@ import movie_reservation.response_dtos.ScreenResponse;
 import movie_reservation.response_dtos.SeatResponse;
 import movie_reservation.services.*;
 import movie_reservation.types.SeatNumber;
+import movie_reservation.types.SeatState;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -146,7 +147,13 @@ public class MovieReservationController {
 
             for (String s : inputs) {
                 SeatResponse seat = seatsByScreen.get(Integer.parseInt(s) - 1);
-                seatNumbers.add(seat.getSeatNumber());
+                if(seat.getState() == SeatState.AVAILABLE)
+                    seatNumbers.add(seat.getSeatNumber());
+                else {
+                    System.out.println("잘못된 좌석을 선택하셨습니다. 다시 선택해주세요");
+                    seatNumbers.clear();
+                    break;
+                }
             }
         } catch(IOException e) {
             e.printStackTrace();

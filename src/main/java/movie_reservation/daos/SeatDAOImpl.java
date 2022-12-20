@@ -12,13 +12,11 @@ public class SeatDAOImpl implements SeatDAO {
     private EntityManager entityManager;
     private JPAQueryFactory queryFactory;
     private QSeat qSeat;
-    private QReservedSeat qReservedSeat;
 
     public SeatDAOImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
         queryFactory = new JPAQueryFactory(this.entityManager);
         qSeat = new QSeat("seat");
-        qReservedSeat = new QReservedSeat("reservedSeat");
     }
 
     @Override
@@ -35,13 +33,10 @@ public class SeatDAOImpl implements SeatDAO {
 
     @Override
     public List<Seat> findSeatsByScreen(Screen screen) {
-        // 해당 상영의 예약 안된 자리만 보여줌
         return queryFactory.select(qSeat)
-                .from()
-                .where(qSeat.theater.screens.contains(screen),
-                        qSeat.seatNumber.ne(qReservedSeat.seat.seatNumber),
-                        qReservedSeat.screen.eq(screen))
-                .orderBy(qSeat.seatNumber.col.asc(), qSeat.seatNumber.hang.asc())
+                .from(qSeat)
+                .where(qSeat.theater.screens.contains(screen))
+                .orderBy(qSeat.seatNumber.hang.asc(), qSeat.seatNumber.col.asc())
                 .fetch();
     }
 

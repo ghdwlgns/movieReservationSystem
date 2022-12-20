@@ -15,4 +15,9 @@ public class SeatNumber {
         this.hang = hang;
         this.col = col;
     }
+
+    @Override
+    public String toString() {
+        return hang + " " + col;
+    }
 }
