@@ -20,11 +20,18 @@ public class ReservationResponse {
 
     @Override
     public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for(SeatNumber sn : reservedSeats) {
+            sb.append(sn).append("\n");
+        }
+
         return "사용자 이름: " + userName + "\n"
                 + "예약 상태: " + state + "\n"
                 + "영화 제목: " + screen.getMovieTitle() + "\n"
                 + "상영관: " + screen.getTheaterFloor() + " " + screen.getTheaterName() + "\n"
                 + "시작 시간: " + screen.getStartTime() + "\n"
-                + "종료 시간: " + screen.getEndTime();
+                + "종료 시간: " + screen.getEndTime() + "\n"
+                + "예매 좌석 목록: " + sb;
     }
 }
